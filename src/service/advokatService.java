@@ -4,6 +4,7 @@
  */
 package service;
 
+
 import model.Advokat;
 /**
  *
@@ -11,6 +12,8 @@ import model.Advokat;
  */
 public interface advokatService {
     public String messageAdvokat(Advokat advokat);
-    public void infoAdvokat(Advokat advokat);
     public void validateAdvokat(Advokat advokat);
+    public Advokat tambahAdvokat(Advokat advokat);
+    public Advokat cariAdvokatById(String index);
+    
 }

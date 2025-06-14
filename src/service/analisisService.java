@@ -12,6 +12,7 @@ import model.AnalisisHukum;
  */
 public interface analisisService {
     public String mesaageAnalisis(AnalisisHukum analisisHukum);
-    public void infoAnalisis(AnalisisHukum analisisHukum);
     public void validateAnalisis(AnalisisHukum analisisHukum);
+    public AnalisisHukum tambahAnalisisHukum(AnalisisHukum analisisHukum);
+    public AnalisisHukum cariAnalisisHukumById(String inputText);
 }

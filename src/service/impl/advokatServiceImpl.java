@@ -4,6 +4,7 @@
  */
 package service.impl;
 
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import model.Advokat;
 import service.advokatService;
@@ -13,6 +14,8 @@ import service.advokatService;
  * @author solosz
  */
 public class advokatServiceImpl implements advokatService {
+    
+    private ArrayList<Advokat> advokatList = new ArrayList<>();
 
     @Override
     public String messageAdvokat(Advokat advokat) {
@@ -24,19 +27,6 @@ public class advokatServiceImpl implements advokatService {
                "\nNo Identitas : " + advokat.getIdentitas();
     }
 
-    @Override
-    public void infoAdvokat(Advokat advokat) {
-        try {
-            validateAdvokat(advokat);
-            
-            String msg = messageAdvokat(advokat);
-            
-            JOptionPane.showMessageDialog(null, msg);
-            
-        } catch (IllegalArgumentException except) {
-            JOptionPane.showMessageDialog(null, except.getMessage());
-        }
-    }
 
     @Override
     public void validateAdvokat(Advokat advokat) throws IllegalArgumentException{
@@ -65,5 +55,54 @@ public class advokatServiceImpl implements advokatService {
             advokat.setIdentitas("-");
         }
     }
+
+    @Override
+    public Advokat tambahAdvokat(Advokat advokat) {
+        try {
+            validateAdvokat(advokat);  
+            this.advokatList.add(advokat);
+
+            JOptionPane.showMessageDialog(null, "Data Berhasil Ditambahkan");
+            return advokat;
+
+        } catch (IllegalArgumentException except) {
+            JOptionPane.showMessageDialog(null, except.getMessage());
+            return null; 
+        }
+    }
+
+
+ 
+    @Override
+    public Advokat cariAdvokatById(String inputText) {
+        if (inputText.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Anda Belum Memasukkan Index.");
+            return null;
+        }
+
+        int index;
+        try {
+            index = Integer.parseInt(inputText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Index harus berupa angka.");
+            return null;
+        }
+
+        if (this.advokatList.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Data Advokat masih kosong.");
+            return null;
+        }
+        if (index < 0 || index >= this.advokatList.size()) {
+            JOptionPane.showMessageDialog(null, "Index " + index + " Tidak Ditemukan");
+            return null;
+        }
+
+        Advokat advokat = advokatList.get(index);
+        JOptionPane.showMessageDialog(null, messageAdvokat(advokat));
+
+        return advokat;
+    }
+
+
     
 }

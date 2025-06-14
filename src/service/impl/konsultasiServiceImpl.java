@@ -5,6 +5,7 @@
 package service.impl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import model.Konsultasi;
 import service.konsultasiService;
@@ -14,6 +15,8 @@ import service.konsultasiService;
  * @author solosz
  */
 public class konsultasiServiceImpl implements konsultasiService{
+    
+    private ArrayList<Konsultasi> konsultasiList = new ArrayList<>();
 
     @Override
     public String messageKonsultasi(Konsultasi konsultasi) {
@@ -24,19 +27,6 @@ public class konsultasiServiceImpl implements konsultasiService{
                "\nStatus : " + konsultasi.getStatus();
     }
 
-    @Override
-    public void infoKonsultasi(Konsultasi konsultasi) {
-        try {
-            validateKonsultasi(konsultasi);
-            
-            String msg = messageKonsultasi(konsultasi);
-            
-            JOptionPane.showMessageDialog(null, msg);
-            
-        } catch (IllegalArgumentException except) {
-            JOptionPane.showMessageDialog(null, except.getMessage());
-        }
-    }
 
     @Override
     public void validateKonsultasi(Konsultasi konsultasi) throws IllegalArgumentException{
@@ -59,6 +49,54 @@ public class konsultasiServiceImpl implements konsultasiService{
         if (konsultasi.getStatus() == null || konsultasi.getStatus().isBlank() ) {
             konsultasi.setStatus("MENUNGGU");
         }
+    }
+
+    @Override
+    public Konsultasi tambahKonsultasi(Konsultasi konsultasi) {
+        try {
+            validateKonsultasi(konsultasi);
+            this.konsultasiList.add(konsultasi);
+            
+            JOptionPane.showMessageDialog(null, "Data Berhasil DiTambahkan");
+            return konsultasi;
+        } catch (IllegalArgumentException except) {
+            JOptionPane.showMessageDialog(null, except.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public Konsultasi cariKonsultasiByID(String inputIndex) {
+        
+        if (inputIndex.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Anda Harus Memasukkan Index");
+            return null;
+        }
+        
+        int index;
+        try {
+            index = Integer.parseInt(inputIndex);
+        } catch (NumberFormatException except) {
+            JOptionPane.showMessageDialog(null, "Index Harus Berupa Angka");
+            return null;
+        }
+        
+        if (this.konsultasiList.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Data Konsultasi Masih Kosong");
+            return null;
+        }
+        
+        if (index < 0 || index >= this.konsultasiList.size() ) {
+            JOptionPane.showMessageDialog(null, "Index " + index + " Tidak Ditemukan" );
+            return null;
+        }
+        
+        Konsultasi konsultasi = this.konsultasiList.get(index);
+        
+        JOptionPane.showMessageDialog(null, messageKonsultasi(konsultasi));
+        
+        return konsultasi;
+        
     }
     
 }

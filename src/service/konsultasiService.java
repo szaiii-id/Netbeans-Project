@@ -11,6 +11,7 @@ import model.Konsultasi;
  */
 public interface konsultasiService {
     public String messageKonsultasi(Konsultasi konsultasi);
-    public void infoKonsultasi(Konsultasi konsultasi);
     public void validateKonsultasi(Konsultasi konsultasi);
+    public Konsultasi tambahKonsultasi(Konsultasi konsultasi);
+    public Konsultasi cariKonsultasiByID(String inputText);
 }

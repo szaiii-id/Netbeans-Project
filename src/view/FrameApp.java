@@ -4,8 +4,10 @@
  */
 package view;
 
+import Utility.Util;
 import java.awt.Color;
 import java.time.ZoneId;
+import javax.swing.JOptionPane;
 import model.Advokat;
 import model.AnalisisHukum;
 import model.Klient;
@@ -25,6 +27,11 @@ import service.konsultasiService;
  * @author solosz
  */
 public class FrameApp extends javax.swing.JFrame {
+    
+    private advokatService serviceadvokat =  new advokatServiceImpl();
+    private klientService serviceklient = new klientServiceImpl();
+    private analisisService serviceanalisis = new analisisServiceImpl();
+    private konsultasiService servicekonsultasi = new konsultasiServiceImpl();
 
     /**
      * Creates new form FrameApp
@@ -35,9 +42,6 @@ public class FrameApp extends javax.swing.JFrame {
         getContentPane().setBackground(Color.DARK_GRAY);
         dateKonsultasi.setDate(new java.util.Date());
         dateAnalisis.setDate(new java.util.Date());
-
-
-
     }
 
     /**
@@ -78,6 +82,8 @@ public class FrameApp extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         pwKlient = new javax.swing.JPasswordField();
         btnInputKlient = new javax.swing.JButton();
+        btnCariKlient = new javax.swing.JButton();
+        txtCariKlient = new javax.swing.JTextField();
         pnlAdvokat = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
@@ -93,6 +99,8 @@ public class FrameApp extends javax.swing.JFrame {
         jLabel18 = new javax.swing.JLabel();
         btnInputAdvokat = new javax.swing.JButton();
         pwAdvokat = new javax.swing.JPasswordField();
+        btnCariAdvokat = new javax.swing.JButton();
+        txtCariAdvokat = new javax.swing.JTextField();
         pnlKonsultasi = new javax.swing.JPanel();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
@@ -107,6 +115,8 @@ public class FrameApp extends javax.swing.JFrame {
         dateKonsultasi = new com.toedter.calendar.JDateChooser();
         cmbStatusKonsultasi = new javax.swing.JComboBox<>();
         btnInputKonsultasi = new javax.swing.JButton();
+        btnCariKonsultasi = new javax.swing.JButton();
+        txtCariKonsultasi = new javax.swing.JTextField();
         pnlAnalisis = new javax.swing.JPanel();
         jLabel25 = new javax.swing.JLabel();
         jLabel26 = new javax.swing.JLabel();
@@ -124,6 +134,8 @@ public class FrameApp extends javax.swing.JFrame {
         areaRekomedasiAnalisis = new javax.swing.JTextArea();
         dateAnalisis = new com.toedter.calendar.JDateChooser();
         btnInputAnalisis = new javax.swing.JButton();
+        btnCariAnalisis = new javax.swing.JButton();
+        txtCariAnalisis = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Legal Balance");
@@ -321,11 +333,18 @@ public class FrameApp extends javax.swing.JFrame {
         pwKlient.setBackground(new java.awt.Color(239, 239, 239));
         pwKlient.setPreferredSize(new java.awt.Dimension(300, 30));
 
-        btnInputKlient.setText("INPUT");
+        btnInputKlient.setText("Tambah");
         btnInputKlient.setPreferredSize(new java.awt.Dimension(100, 40));
         btnInputKlient.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnInputKlientActionPerformed(evt);
+            }
+        });
+
+        btnCariKlient.setText("Cari Data");
+        btnCariKlient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCariKlientActionPerformed(evt);
             }
         });
 
@@ -346,15 +365,17 @@ public class FrameApp extends javax.swing.JFrame {
                             .addComponent(jLabel8)
                             .addComponent(jLabel9)
                             .addComponent(jLabel10)
-                            .addComponent(jLabel11))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 229, Short.MAX_VALUE)
-                        .addGroup(pnlKlientLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel11)
+                            .addComponent(btnCariKlient, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(197, 197, 197)
+                        .addGroup(pnlKlientLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(pwKlient, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtTelpKlient, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtIdentitasKlient, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtEmailKlient, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtNamaKlient, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtIdKlient, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(txtIdKlient, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtCariKlient))))
                 .addGap(88, 88, 88))
             .addGroup(pnlKlientLayout.createSequentialGroup()
                 .addGap(381, 381, 381)
@@ -392,7 +413,11 @@ public class FrameApp extends javax.swing.JFrame {
                     .addComponent(txtIdentitasKlient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(46, 46, 46)
                 .addComponent(btnInputKlient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(265, Short.MAX_VALUE))
+                .addGap(38, 38, 38)
+                .addGroup(pnlKlientLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCariKlient, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCariKlient, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(188, Short.MAX_VALUE))
         );
 
         Content.add(pnlKlient, "card6");
@@ -435,7 +460,7 @@ public class FrameApp extends javax.swing.JFrame {
         jLabel18.setFont(new java.awt.Font("Poppins Light", 0, 18)); // NOI18N
         jLabel18.setText("No Identitas");
 
-        btnInputAdvokat.setText("INPUT");
+        btnInputAdvokat.setText("Tambah");
         btnInputAdvokat.setPreferredSize(new java.awt.Dimension(100, 40));
         btnInputAdvokat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -446,6 +471,13 @@ public class FrameApp extends javax.swing.JFrame {
         pwAdvokat.setBackground(new java.awt.Color(239, 239, 239));
         pwAdvokat.setPreferredSize(new java.awt.Dimension(300, 30));
 
+        btnCariAdvokat.setText("Cari Data");
+        btnCariAdvokat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCariAdvokatActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlAdvokatLayout = new javax.swing.GroupLayout(pnlAdvokat);
         pnlAdvokat.setLayout(pnlAdvokatLayout);
         pnlAdvokatLayout.setHorizontalGroup(
@@ -455,7 +487,7 @@ public class FrameApp extends javax.swing.JFrame {
                     .addGroup(pnlAdvokatLayout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnInputAdvokat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlAdvokatLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlAdvokatLayout.createSequentialGroup()
                         .addGap(127, 127, 127)
                         .addGroup(pnlAdvokatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlAdvokatLayout.createSequentialGroup()
@@ -470,10 +502,6 @@ public class FrameApp extends javax.swing.JFrame {
                                 .addComponent(jLabel15)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(txtEmailAdvokat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnlAdvokatLayout.createSequentialGroup()
-                                .addComponent(jLabel18)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtIdentitasAdvokat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlAdvokatLayout.createSequentialGroup()
                                 .addGroup(pnlAdvokatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel17)
@@ -481,7 +509,15 @@ public class FrameApp extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(pnlAdvokatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(pwAdvokat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtTelpAdvokat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                    .addComponent(txtTelpAdvokat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlAdvokatLayout.createSequentialGroup()
+                                .addGroup(pnlAdvokatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel18)
+                                    .addComponent(btnCariAdvokat, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
+                                .addGroup(pnlAdvokatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtIdentitasAdvokat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtCariAdvokat))))))
                 .addGap(86, 86, 86))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlAdvokatLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -517,9 +553,13 @@ public class FrameApp extends javax.swing.JFrame {
                 .addGroup(pnlAdvokatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18)
                     .addComponent(txtIdentitasAdvokat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(48, 48, 48)
+                .addGap(59, 59, 59)
                 .addComponent(btnInputAdvokat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(252, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(pnlAdvokatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtCariAdvokat, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                    .addComponent(btnCariAdvokat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(185, Short.MAX_VALUE))
         );
 
         Content.add(pnlAdvokat, "card5");
@@ -558,11 +598,18 @@ public class FrameApp extends javax.swing.JFrame {
         cmbStatusKonsultasi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MENUNGGU", "PROSES", "SELESAI" }));
         cmbStatusKonsultasi.setPreferredSize(new java.awt.Dimension(76, 30));
 
-        btnInputKonsultasi.setText("INPUT");
+        btnInputKonsultasi.setText("Tambah");
         btnInputKonsultasi.setPreferredSize(new java.awt.Dimension(100, 40));
         btnInputKonsultasi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnInputKonsultasiActionPerformed(evt);
+            }
+        });
+
+        btnCariKonsultasi.setText("Cari Data");
+        btnCariKonsultasi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCariKonsultasiActionPerformed(evt);
             }
         });
 
@@ -571,32 +618,40 @@ public class FrameApp extends javax.swing.JFrame {
         pnlKonsultasiLayout.setHorizontalGroup(
             pnlKonsultasiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlKonsultasiLayout.createSequentialGroup()
-                .addGap(116, 116, 116)
-                .addGroup(pnlKonsultasiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnInputKonsultasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(pnlKonsultasiLayout.createSequentialGroup()
-                        .addGroup(pnlKonsultasiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel20)
-                            .addComponent(jLabel22)
-                            .addComponent(jLabel23)
-                            .addComponent(jLabel24)
-                            .addComponent(jLabel21))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 258, Short.MAX_VALUE)
-                        .addGroup(pnlKonsultasiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cmbStatusKonsultasi, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dateKonsultasi, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(pnlKonsultasiLayout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addGroup(pnlKonsultasiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtIdKonsultasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlKonsultasiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jScrollPane1)
-                                        .addComponent(txtIdKlientKonsultasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
-                .addGap(76, 76, 76))
-            .addGroup(pnlKonsultasiLayout.createSequentialGroup()
                 .addGap(338, 338, 338)
                 .addComponent(jLabel19)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(pnlKonsultasiLayout.createSequentialGroup()
+                .addGap(116, 116, 116)
+                .addGroup(pnlKonsultasiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlKonsultasiLayout.createSequentialGroup()
+                        .addComponent(btnCariKonsultasi, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(pnlKonsultasiLayout.createSequentialGroup()
+                        .addGroup(pnlKonsultasiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(pnlKonsultasiLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(btnInputKonsultasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlKonsultasiLayout.createSequentialGroup()
+                                .addGroup(pnlKonsultasiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel20)
+                                    .addComponent(jLabel22)
+                                    .addComponent(jLabel23)
+                                    .addComponent(jLabel24)
+                                    .addComponent(jLabel21))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 258, Short.MAX_VALUE)
+                                .addGroup(pnlKonsultasiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cmbStatusKonsultasi, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(dateKonsultasi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(pnlKonsultasiLayout.createSequentialGroup()
+                                        .addGap(2, 2, 2)
+                                        .addGroup(pnlKonsultasiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtIdKonsultasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlKonsultasiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(jScrollPane1)
+                                                .addComponent(txtIdKlientKonsultasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(txtCariKonsultasi))))
+                        .addGap(76, 76, 76))))
         );
         pnlKonsultasiLayout.setVerticalGroup(
             pnlKonsultasiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -628,7 +683,11 @@ public class FrameApp extends javax.swing.JFrame {
                     .addComponent(jLabel24))
                 .addGap(47, 47, 47)
                 .addComponent(btnInputKonsultasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(218, Short.MAX_VALUE))
+                .addGap(36, 36, 36)
+                .addGroup(pnlKonsultasiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnCariKonsultasi, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                    .addComponent(txtCariKonsultasi))
+                .addContainerGap(144, Short.MAX_VALUE))
         );
 
         Content.add(pnlKonsultasi, "card4");
@@ -674,11 +733,18 @@ public class FrameApp extends javax.swing.JFrame {
 
         dateAnalisis.setPreferredSize(new java.awt.Dimension(300, 30));
 
-        btnInputAnalisis.setText("INPUT");
+        btnInputAnalisis.setText("Tambah");
         btnInputAnalisis.setPreferredSize(new java.awt.Dimension(100, 40));
         btnInputAnalisis.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnInputAnalisisActionPerformed(evt);
+            }
+        });
+
+        btnCariAnalisis.setText("Cari Data");
+        btnCariAnalisis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCariAnalisisActionPerformed(evt);
             }
         });
 
@@ -692,22 +758,28 @@ public class FrameApp extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnInputAnalisis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlAnalisisLayout.createSequentialGroup()
-                        .addGap(113, 113, 113)
                         .addGroup(pnlAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel26)
-                            .addComponent(jLabel27)
-                            .addComponent(jLabel29)
-                            .addComponent(jLabel31)
-                            .addComponent(jLabel30)
-                            .addComponent(jLabel28))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 226, Short.MAX_VALUE)
+                            .addGroup(pnlAnalisisLayout.createSequentialGroup()
+                                .addGap(113, 113, 113)
+                                .addGroup(pnlAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel26)
+                                    .addComponent(jLabel27)
+                                    .addComponent(jLabel29)
+                                    .addComponent(jLabel31)
+                                    .addComponent(jLabel30)
+                                    .addComponent(jLabel28)))
+                            .addGroup(pnlAnalisisLayout.createSequentialGroup()
+                                .addGap(102, 102, 102)
+                                .addComponent(btnCariAnalisis, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 213, Short.MAX_VALUE)
                         .addGroup(pnlAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtIdAnalisis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtIdKonsultasiAnalisis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtIdAnalisis, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtIdKonsultasiAnalisis, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane3)
                             .addComponent(dateAnalisis, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane2)
-                            .addComponent(txtIdAdvokatAnalisis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtIdAdvokatAnalisis, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtCariAnalisis))))
                 .addGap(95, 95, 95))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlAnalisisLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -744,9 +816,13 @@ public class FrameApp extends javax.swing.JFrame {
                 .addGroup(pnlAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel31)
                     .addComponent(dateAnalisis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(50, 50, 50)
+                .addGap(35, 35, 35)
                 .addComponent(btnInputAnalisis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(74, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(pnlAnalisisLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnCariAnalisis, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addComponent(txtCariAnalisis))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         Content.add(pnlAnalisis, "card3");
@@ -804,8 +880,11 @@ public class FrameApp extends javax.swing.JFrame {
         analisisHukum.setRekomendasi(areaRekomedasiAnalisis.getText());
         analisisHukum.setTanggal(dateAnalisis.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         
-        analisisService serviceanalisis = new analisisServiceImpl();
-        serviceanalisis.infoAnalisis(analisisHukum);
+        
+        this.serviceanalisis.tambahAnalisisHukum(analisisHukum);
+        Util.resetForm(txtIdAnalisis, txtIdAdvokatAnalisis, txtIdKonsultasiAnalisis);
+        Util.resetForm(areaAnalisis, areaRekomedasiAnalisis);
+        
     }//GEN-LAST:event_btnInputAnalisisActionPerformed
 
     private void btnInputKlientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInputKlientActionPerformed
@@ -819,8 +898,9 @@ public class FrameApp extends javax.swing.JFrame {
         klient.setTelp(txtTelpKlient.getText());
         klient.setIdentitas(txtIdentitasKlient.getText());
         
-        klientService serviceklient = new klientServiceImpl();
-        serviceklient.infoKlient(klient);
+        
+        serviceklient.tambahKlient(klient);
+        Util.resetForm(txtIdKlient, txtNamaKlient, txtEmailKlient, pwKlient, txtTelpKlient, txtIdentitasKlient);
         
         
     }//GEN-LAST:event_btnInputKlientActionPerformed
@@ -833,9 +913,10 @@ public class FrameApp extends javax.swing.JFrame {
         advokat.setPassword(new String(pwAdvokat.getPassword()));
         advokat.setTelp(txtTelpAdvokat.getText());
         advokat.setIdentitas(txtIdentitasAdvokat.getText());
-        
-        advokatService serviceadvokat =  new advokatServiceImpl();
-        serviceadvokat.infoAdvokat(advokat);
+
+        serviceadvokat.tambahAdvokat(advokat);
+        Util.resetForm(txtIdAdvokat, txtNamaAdvokat, txtEmailAdvokat, pwAdvokat, txtTelpAdvokat, txtIdentitasAdvokat);
+
     }//GEN-LAST:event_btnInputAdvokatActionPerformed
 
     private void btnInputKonsultasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInputKonsultasiActionPerformed
@@ -846,9 +927,37 @@ public class FrameApp extends javax.swing.JFrame {
         konsultasi.setTanggal(dateKonsultasi.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         konsultasi.setStatus(cmbStatusKonsultasi.getSelectedItem().toString());
         
-        konsultasiService servicekonsultasi = new konsultasiServiceImpl();
-        servicekonsultasi.infoKonsultasi(konsultasi);
+        
+        this.servicekonsultasi.tambahKonsultasi(konsultasi);
+        Util.resetForm(txtIdKonsultasi, txtIdKlientKonsultasi);
+        Util.resetForm(areaPertanyaanKonsultasi);
+        Util.resetForm(cmbStatusKonsultasi);
     }//GEN-LAST:event_btnInputKonsultasiActionPerformed
+
+    private void btnCariAdvokatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariAdvokatActionPerformed
+      this.serviceadvokat.cariAdvokatById(txtCariAdvokat.getText());
+      
+      Util.resetForm(txtCariAdvokat);
+    }//GEN-LAST:event_btnCariAdvokatActionPerformed
+
+    private void btnCariKlientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariKlientActionPerformed
+        this.serviceklient.cariKlientById(txtCariKlient.getText());
+        
+        Util.resetForm(txtCariKlient);
+    }//GEN-LAST:event_btnCariKlientActionPerformed
+
+    private void btnCariKonsultasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariKonsultasiActionPerformed
+        this.servicekonsultasi.cariKonsultasiByID(txtCariKonsultasi.getText());
+        
+        Util.resetForm(txtCariKonsultasi);
+        
+    }//GEN-LAST:event_btnCariKonsultasiActionPerformed
+
+    private void btnCariAnalisisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariAnalisisActionPerformed
+        this.serviceanalisis.cariAnalisisHukumById(txtCariAnalisis.getText());
+        
+        Util.resetForm(txtCariAnalisis);
+    }//GEN-LAST:event_btnCariAnalisisActionPerformed
 
     /**
      * @param args the command line arguments
@@ -895,6 +1004,10 @@ public class FrameApp extends javax.swing.JFrame {
     private javax.swing.JTextArea areaRekomedasiAnalisis;
     private javax.swing.JButton btnAdvokat;
     private javax.swing.JButton btnAnalisis;
+    private javax.swing.JButton btnCariAdvokat;
+    private javax.swing.JButton btnCariAnalisis;
+    private javax.swing.JButton btnCariKlient;
+    private javax.swing.JButton btnCariKonsultasi;
     private javax.swing.JButton btnHome;
     private javax.swing.JButton btnInputAdvokat;
     private javax.swing.JButton btnInputAnalisis;
@@ -946,6 +1059,10 @@ public class FrameApp extends javax.swing.JFrame {
     private javax.swing.JPanel pnlKonsultasi;
     private javax.swing.JPasswordField pwAdvokat;
     private javax.swing.JPasswordField pwKlient;
+    private javax.swing.JTextField txtCariAdvokat;
+    private javax.swing.JTextField txtCariAnalisis;
+    private javax.swing.JTextField txtCariKlient;
+    private javax.swing.JTextField txtCariKonsultasi;
     private javax.swing.JTextField txtEmailAdvokat;
     private javax.swing.JTextField txtEmailKlient;
     private javax.swing.JTextField txtIdAdvokat;

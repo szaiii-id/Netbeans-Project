@@ -4,6 +4,7 @@
  */
 package service.impl;
 
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import model.AnalisisHukum;
 import service.analisisService;
@@ -13,6 +14,8 @@ import service.analisisService;
  * @author solosz
  */
 public class analisisServiceImpl implements analisisService{
+    
+    private ArrayList<AnalisisHukum> analisisHukumList = new ArrayList<>();
 
     @Override
     public String mesaageAnalisis(AnalisisHukum analisisHukum) {
@@ -24,20 +27,7 @@ public class analisisServiceImpl implements analisisService{
                "\nTanggal : " + analisisHukum.getTanggal();
     }
 
-    @Override
-    public void infoAnalisis(AnalisisHukum analisisHukum) {
-        
-        try {
-            validateAnalisis(analisisHukum);
-        
-            String msg = mesaageAnalisis(analisisHukum);
 
-            JOptionPane.showMessageDialog(null, msg);
-        } catch (IllegalArgumentException except) {
-            JOptionPane.showMessageDialog(null, except.getMessage());
-        }
-
-    }
 
     @Override
     public void validateAnalisis(AnalisisHukum analisisHukum) throws IllegalArgumentException{
@@ -63,6 +53,54 @@ public class analisisServiceImpl implements analisisService{
         if (analisisHukum.getTanggal()== null ) {
             throw new IllegalArgumentException("Tanggal Analisis Tidak Boleh Kosong");
         }
+    }
+
+    @Override
+    public AnalisisHukum tambahAnalisisHukum(AnalisisHukum analisisHukum) {
+        try {
+            
+            validateAnalisis(analisisHukum);
+            this.analisisHukumList.add(analisisHukum);
+            
+            JOptionPane.showMessageDialog(null, "Data Berhasil Ditambahkan");
+            return analisisHukum;
+        } catch (IllegalArgumentException except) {
+            JOptionPane.showMessageDialog(null, except.getMessage());
+            return null;
+        }
+    }
+
+
+
+    @Override
+    public AnalisisHukum cariAnalisisHukumById(String inputText) {
+        if (inputText.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Anda Belum Memasukkan Index");
+            return null;
+        }
+        
+        int index;
+        try {
+            index = Integer.parseInt(inputText);
+        } catch (NumberFormatException except) {
+            JOptionPane.showMessageDialog(null, "Index Harus Berupa Angka");
+            return null;
+        }
+        
+        if (this.analisisHukumList.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Data Analisis Hukum Masih Kosong");
+            return null;
+        }
+        
+        if (index < 0 || index >= this.analisisHukumList.size()) {
+            JOptionPane.showMessageDialog(null, "Index " + index + " Tidak Ditemukan");
+            return null;
+        }
+        
+        AnalisisHukum analisisHukum = this.analisisHukumList.get(index);
+        JOptionPane.showMessageDialog(null, mesaageAnalisis(analisisHukum));
+        
+        return analisisHukum;
     }
     
 }

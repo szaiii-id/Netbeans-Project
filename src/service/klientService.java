@@ -12,7 +12,10 @@ import model.Klient;
  */
 public interface klientService {
     public String massageKlient(Klient klient);
-    public void infoKlient(Klient klient);
     public void validateKlient(Klient klient);
+    public Klient tambahKlient(Klient klient);
+    public Klient cariKlientById(String index);
+
+
 }
 

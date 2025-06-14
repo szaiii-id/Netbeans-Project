@@ -4,6 +4,7 @@
  */
 package service.impl;
 
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import model.Klient;
 import service.klientService;
@@ -14,26 +15,20 @@ import service.klientService;
  * @author solosz
  */
 public class klientServiceImpl implements klientService{
+    
+    private ArrayList<Klient> klientList = new ArrayList<>();
+    
+    
     @Override
     public String massageKlient(Klient klient) {
-        return "Id Klient : " + klient.getId_klien() + "\nNama : " + klient.getNama() + "\nEmail : " + klient.getEmail() +
-                          "\nPassword : " + klient.getPassword() + "\nNo Telp : " + klient.getTelp() + "\nNo Identitas : " + klient.getIdentitas() ;
+        return "Id Klient : " + klient.getId_klien() + 
+                "\nNama : " + klient.getNama() + 
+                "\nEmail : " + klient.getEmail() +
+                "\nPassword : " + klient.getPassword() + 
+                "\nNo Telp : " + klient.getTelp() + 
+                "\nNo Identitas : " + klient.getIdentitas() ;
     }
 
-    @Override
-    public void infoKlient(Klient klient) {
-        try {
-            validateKlient(klient);
-            
-            
-            String msg = massageKlient(klient);
-            
-            JOptionPane.showMessageDialog(null, msg);
-            
-        } catch (IllegalArgumentException except) {
-            JOptionPane.showMessageDialog(null, except.getMessage());
-        }
-    }
 
     @Override
     public void validateKlient(Klient klient) throws IllegalArgumentException{
@@ -66,4 +61,54 @@ public class klientServiceImpl implements klientService{
             klient.setIdentitas("-");
         }
     }
+
+    @Override
+    public Klient tambahKlient(Klient klient) {
+        try {
+            
+            validateKlient(klient);
+            this.klientList.add(klient);
+            
+            JOptionPane.showMessageDialog(null, "Data Berhasil Di Tambahkan");
+            
+            return klient;
+        } catch (IllegalArgumentException except) {
+            JOptionPane.showMessageDialog(null, except.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public Klient cariKlientById(String inputIndex) {
+        if (inputIndex.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Anda Harus Memasukkan Index");
+            return null;
+        }
+        
+        int index;
+        try {
+            index = Integer.parseInt(inputIndex);
+        } catch (NumberFormatException except) {
+            JOptionPane.showMessageDialog(null, "Index Harus Berupa Angka");
+            return null;
+        }
+        
+        if (this.klientList.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Data Klient Masih Kosong");
+            return null;
+        }
+        
+        if (index < 0 || index >= this.klientList.size()) {
+            JOptionPane.showMessageDialog(null, "Index" + index + "Tidak Ditemukan");
+            return null;
+        }
+        
+        Klient klient = this.klientList.get(index);
+        
+        JOptionPane.showMessageDialog(null, massageKlient(klient));
+        
+        return klient;
+    }
+
+
 }

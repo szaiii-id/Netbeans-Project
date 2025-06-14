@@ -1,2 +1,2 @@
 Project Netbeans dengan MVC dengan DataDummy
-Install Jcalender Jika ingin menjalankan Project
+Tambahkan File Jar Jcalender Jika ingin menjalankan Project
